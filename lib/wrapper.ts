@@ -48,7 +48,7 @@ const handleSwagger = (router, options) => {
   });
 };
 
-const handleMap = (router, StaticClass, config) => {
+const handleMap = (router, StaticClass) => {
   const ctx = {
     app: {}
   }
@@ -90,13 +90,16 @@ const handleMap = (router, StaticClass, config) => {
       `${convertPath(path)}`,
       validator(c[item].parameters),
       ...middlewares,
-      ctx => c[item].call({ctx, service: ctx.service, logger: ctx.logger, app: ctx.app, config: config})
+      ctx => {
+        const c = new StaticClass(ctx);
+        c[item]();
+      }
     ];
     router[method](...chain);
   });
 };
 
-const handleMapDir = (router, config, dir, options) => {
+const handleMapDir = (router, dir, options) => {
   const {
     recursive = false
   } = options;
@@ -106,15 +109,14 @@ const handleMapDir = (router, config, dir, options) => {
   classes
     .map(c => c.default)
     .forEach((c) => {
-      handleMap(router, c, config);
+      handleMap(router, c);
     });
 };
 
 const wrapper = ({
   router,
-  config
 }, options) => {
-  handleMapDir(router, config, _path.resolve() + '/app/controller', {recursive: true})
+  handleMapDir(router, _path.resolve() + '/app/controller', {recursive: true})
   handleSwagger(router, options);
 };
 
