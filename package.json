@@ -20,6 +20,7 @@
     "autod": "autod",
     "lint": "tslint .",
     "clean": "ets clean",
+    "build": "tsc -p tsconfig_publish.json",
     "pub": "tsc -p tsconfig_publish.json && npm publish"
   },
   "dependencies": {
