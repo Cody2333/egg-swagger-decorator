@@ -30,7 +30,7 @@ npm install
 npm run dev
 
 finally open:
-http://localhost:7001/api/swagger-html
+http://localhost:7001/swagger-html
 
 ```
 
