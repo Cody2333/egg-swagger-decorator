@@ -1,5 +1,4 @@
-declare const wrapper: ({ router, config }: {
+declare const wrapper: ({ router, }: {
     router: any;
-    config: any;
 }, options: any) => void;
 export default wrapper;
