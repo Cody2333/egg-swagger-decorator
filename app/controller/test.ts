@@ -6,11 +6,6 @@ const testTag = tags(['test']);
 const userSchema = {
   name: { type: 'string', required: true },
   gender: { type: 'string', required: false, example: 'male' },
-  groups: {
-    type: 'array',
-    required: true,
-    items: { type: 'string', example: 'group1' }
-  }
 };
 
 export default class Test extends Controller{
@@ -18,7 +13,7 @@ export default class Test extends Controller{
   @summary('get user list')
   @testTag
   @query({
-    type: { type: 'number', required: true, default: 1, description: 'type' }
+    type: { type: 'string', required: false, default: 'a', description: 'type' }
   })
   public async getUsers() {
     const { ctx } = this;
@@ -34,8 +29,8 @@ export default class Test extends Controller{
   })
   public async getUser() {
     const { id } = this.ctx.params;
-    const user = {user1: {id, name: 'xxx'}}
-    this.ctx.body = { user };
+    const result = { user: { id } }
+    this.ctx.body = result;
   }
 
   @request('post', '/users')
@@ -43,10 +38,6 @@ export default class Test extends Controller{
   @body(userSchema)
   public async postUser() {
     const body = this.ctx.request.body;
-    this.ctx.body = { result: body };
-  }
-
-  public async temp(ctx) {
-    ctx.body = { result: 'success' };
+    this.ctx.body = body;
   }
 }

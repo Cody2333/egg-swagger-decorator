@@ -8,7 +8,7 @@ const HomeSchema = {
 };
 
 const logTime = () => async (ctx, next) => {
-  if (!ctx) throw new Error('invalid ctx');
+  ctx.myLog = 'logTime';
   console.log(`start: ${new Date()}`);
   await next();
   console.log(`end: ${new Date()}`);
