@@ -8,20 +8,18 @@
     "typescript": true
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-showcase",
-    "stop": "egg-scripts stop --title=egg-server-showcase",
-    "dev": "egg-bin dev -r egg-ts-helper/register",
-    "debug": "egg-bin debug -r egg-ts-helper/register",
+    "dev": "egg-bin dev --baseDir=./test/fixtures/apps/swagger-decorator-test -r egg-ts-helper/register",
+    "debug": "egg-bin debug --baseDir=./test/fixtures/apps/swagger-decorator-test -r egg-ts-helper/register",
     "test-local": "egg-bin test -r egg-ts-helper/register",
     "test": "npm run lint -- --fix && npm run test-local",
     "cov": "egg-bin cov -r egg-ts-helper/register",
-    "tsc": "ets && tsc -p tsconfig.json",
+    "tsc": "ets --cwd=./test/fixtures/apps/swagger-decorator-test && tsc -p tsconfig.json",
     "ci": "npm run lint && npm run cov && npm run tsc",
     "autod": "autod",
     "lint": "tslint .",
     "clean": "ets clean",
     "build": "tsc -p tsconfig_publish.json",
-    "pub": "tsc -p tsconfig_publish.json && npm publish"
+    "pub": "npm run build && npm publish"
   },
   "dependencies": {
     "lodash": "^4.17.5"

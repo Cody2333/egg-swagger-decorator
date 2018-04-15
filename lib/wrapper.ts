@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
-import * as _path from 'path';
 import swaggerHTML from './swaggerHTML';
 import swaggerJSON from './swaggerJSON';
 import validate from './validate';
 import {apiObjects} from './decorator';
 import {convertPath, getPath, readSync} from './utils';
+import {Application} from 'egg';
 /**
  * allowed http methods
  */
@@ -58,7 +58,7 @@ const handleMap = (router, StaticClass) => {
   _.pull(methods, 'name', 'constructor', 'length', 'prototype', 'pathName', 'fullPath');
   // map all method in methods
   methods
-  // filter methods withour @request decorator
+  // filter methods without @request decorator
     .filter((item) => {
     const {path, method} = c[item];
     if (!path && !method) {
@@ -103,7 +103,7 @@ const handleMapDir = (router, dir, options) => {
   const {
     recursive = false
   } = options;
-  let filenames = readSync(dir, [], recursive).map(name => name.substring(0,name.length-3));
+  let filenames = readSync(dir, [], recursive).map(name => name.substring(0, name.length - 3));
   filenames = _.uniq(filenames);
   const classes = filenames.map(filename => require(filename));
   classes
@@ -113,10 +113,9 @@ const handleMapDir = (router, dir, options) => {
     });
 };
 
-const wrapper = ({
-  router,
-}, options) => {
-  handleMapDir(router, _path.resolve() + '/app/controller', {recursive: true})
+const wrapper = (app : Application, options) => {
+  const {router} = app;
+  handleMapDir(router, app.config.baseDir + '/app/controller', {recursive: true})
   handleSwagger(router, options);
 };
 

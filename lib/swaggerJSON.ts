@@ -26,13 +26,14 @@ const swaggerJSON = (options = {}, apiObjects) => {
       const description = value.description
         ? value.description
         : summary;
-      const responses = value.responses
+      const defaultResp = {
+        200: {
+          description: 'success'
+        }
+      };
+      const responses : any = value.responses
         ? value.responses
-        : {
-          200: {
-            description: 'success'
-          }
-        };
+        : defaultResp;
       const {
         query = [],
         path: pathParams = [],

@@ -11,18 +11,6 @@ const convertPath = (path) => {
 
 const getPath = (prefix, path) => `${prefix}${path}`.replace('//', '/');
 
-
-/**
- * check if an object is an instance of SwaggerRouter
- * @param {Object} o
- */
-const isSwaggerRouter = (o) => {
-  if (!o) {
-    return false;
-  }
-  return true;
-};
-
 /**
  * read all files in the dir
  * @param {String} dir
@@ -41,4 +29,4 @@ const readSync = (dir, result: any = [], recursive = false) => {
   return result;
 };
 
-export { convertPath, getPath, isSwaggerRouter, readSync };
+export { convertPath, getPath, readSync };

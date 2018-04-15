@@ -1,18 +1,9 @@
 'use strict';
 
-import { EggAppConfig, PowerPartial } from 'egg';
-
-// for config.{env}.ts
-export type DefaultConfig = PowerPartial<EggAppConfig & BizConfig>;
-
-// app special config scheme
-export interface BizConfig {
-  sourceUrl: string;
-  middleware: string[];
-}
+import { EggAppConfig } from 'egg';
 
 export default (appInfo: EggAppConfig) => {
-  const config = {} as PowerPartial<EggAppConfig> & BizConfig;
+  const config: any = {};
 
   // app special config
   config.sourceUrl = `https://github.com/eggjs/examples/tree/master/${appInfo.name}`;
@@ -23,6 +14,8 @@ export default (appInfo: EggAppConfig) => {
 
   // add your config here
   config.middleware = [];
-
+  config.security = {
+    csrf: {enable: false}
+  }
   return config;
 };

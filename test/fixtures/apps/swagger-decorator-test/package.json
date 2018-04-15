@@ -1,0 +1,7 @@
+{
+  "name": "swagger-decorator-test",
+  "version": "0.0.1",
+  "egg": {
+    "typescript": true
+  }
+}

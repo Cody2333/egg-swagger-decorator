@@ -1,5 +1,5 @@
-import { Controller } from 'egg';
-import { request, summary, query, path, body, tags } from '../../lib';
+import { Controller, Context } from 'egg';
+import { request, summary, query, path, body, tags, responses, middlewares, description } from '../../../../../../lib';
 
 const testTag = tags(['test']);
 
@@ -8,10 +8,20 @@ const userSchema = {
   gender: { type: 'string', required: false, example: 'male' },
 };
 
+const resp = {
+  200: {
+    description: 'custom success'
+  },
+  400: {
+    decription: 'custom error'
+  }
+}
+
 export default class Test extends Controller{
   @request('get', '/users')
-  @summary('get user list')
+  @description('get user list')
   @testTag
+  @middlewares(async (ctx: Context, next) => {ctx.logger.info('mid'); await next()})
   @query({
     type: { type: 'string', required: false, default: 'a', description: 'type' }
   })
@@ -36,6 +46,7 @@ export default class Test extends Controller{
   @request('post', '/users')
   @testTag
   @body(userSchema)
+  @responses(resp)
   public async postUser() {
     const body = this.ctx.request.body;
     this.ctx.body = body;
