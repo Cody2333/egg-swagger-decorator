@@ -1,4 +1,3 @@
-declare const wrapper: ({ router, }: {
-    router: any;
-}, options: any) => void;
+import { Application } from 'egg';
+declare const wrapper: (app: Application, options: any) => void;
 export default wrapper;
