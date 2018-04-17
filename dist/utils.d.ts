@@ -4,5 +4,5 @@
  */
 declare const convertPath: (path: any) => any;
 declare const getPath: (prefix: string, path: string) => string;
-declare const readSync: (dir: string, result?: any, recursive?: boolean) => any;
-export { convertPath, getPath, readSync };
+declare function loadSwaggerClassesToContext(app: any): void;
+export { convertPath, getPath, loadSwaggerClassesToContext };
