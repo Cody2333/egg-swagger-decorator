@@ -3,7 +3,7 @@ import swaggerHTML from './swaggerHTML';
 import swaggerJSON from './swaggerJSON';
 import validate from './validate';
 import {apiObjects} from './decorator';
-import {convertPath, getPath, readSync} from './utils';
+import {convertPath, getPath, loadSwaggerClassesToContext} from './utils';
 import { Application, Router, Controller } from 'egg';
 import {WrapperOptions} from './swaggerJSON';
 /**
@@ -54,20 +54,19 @@ const handleSwagger = (router : Router, options: WrapperOptions) => {
 
 declare module 'egg' {
   interface Application {
-    createAnonymousContext(req?: any): Context
+    createAnonymousContext(req?: any): Context;
+    swaggerControllerClasses: {};
   }
 }
+
 const handleMap = (app : Application, ControllerClass : typeof Controller) => {
   const anonymousContext = app.createAnonymousContext();
   const router = app.router;
   const c : Controller = new ControllerClass(Object.assign(anonymousContext));
-
   const methods : string[] = Object.getOwnPropertyNames(Object.getPrototypeOf(c));
-
   // remove useless field in class object:  constructor, length, name, prototype
   _.pull(methods, 'name', 'constructor', 'length', 'prototype', 'pathName', 'fullPath');
   // map all method in methods
-
   methods
   // filter methods without @request decorator
     .filter((item) => {
@@ -110,21 +109,10 @@ const handleMap = (app : Application, ControllerClass : typeof Controller) => {
   });
 };
 
-interface MapOptions {
-  recursive: boolean,
-}
-
-const handleMapDir = (app: Application, options? : MapOptions) => {
-  const dir = app.config.baseDir + '/app/controller';
-  const recursive= options ? options.recursive : true;
-  let filenames = readSync(dir, [], recursive).map(name => name.substring(0, name.length - 3));
-  filenames = _.uniq(filenames);
-  const classes = filenames.map(filename => require(filename));
-  classes
-    .map(c => c.default)
-    .forEach((c) => {
-      handleMap(app, c);
-    });
+const handleMapDir = (app: Application) => {
+  loadSwaggerClassesToContext(app);
+  const classes = app.swaggerControllerClasses;
+  Object.keys(classes).forEach(name => {handleMap(app, classes[name])})
 };
 
 const wrapper = (app : Application, options?: WrapperOptions) => {

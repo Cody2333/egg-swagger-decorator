@@ -1,6 +1,6 @@
 import { Application } from 'egg';
 import { wrapper } from '../../../../../lib';
-export default (app: Application) => {
+export default (app: Application) => {  
   wrapper(app, {
     // // [optional] default is /swagger-html
     // swaggerHtmlEndpoint: '/sw',

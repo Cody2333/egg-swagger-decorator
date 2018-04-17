@@ -1,8 +1,7 @@
 'use strict';
 import {mock} from 'egg-mock/bootstrap';
-import * as _path from 'path';
 import * as assert from 'assert';
-import {getPath, convertPath, readSync} from '../lib/utils';
+import {getPath, convertPath, loadSwaggerClassesToContext} from '../lib/utils';
 import validate from '../lib/validate';
 import {Context} from 'egg';
 
@@ -18,6 +17,13 @@ describe('test/app/lib.test.ts', () => {
 
     after(() => app.close());
     afterEach(mock.restore);
+
+    describe('Load swagger classes to app', () => {
+      it('should inject app/controller classes to app.swaggerControllerClasses', async () => {
+        loadSwaggerClassesToContext(app);
+        assert(typeof app.swaggerControllerClasses === 'object')
+      })
+    })
 
     describe('Swagger Doc Api:', () => {
       it('GET /api/swagger-html should return success for swagger ui page', async() => {
@@ -100,13 +106,6 @@ describe('test/app/lib.test.ts', () => {
       it('should convert /api + /user -> /api/user', () => {
         const r = getPath('/api', '/user');
         assert(r === '/api/user');
-      });
-    });
-    describe('ReadSync:', () => {
-      it('should return an array,length = 2', () => {
-        const dir = _path.resolve(__dirname, './fixtures/apps/swagger-decorator-test/app/controller');
-        const r = readSync(dir);
-        assert(r.length === 2)
       });
     });
     describe('Validate:', () => {

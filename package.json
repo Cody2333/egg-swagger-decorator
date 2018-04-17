@@ -7,7 +7,12 @@
   "egg": {
     "typescript": true
   },
+  "eggPlugin": {
+    "name": "swaggerDecorator"
+  },
   "scripts": {
+    "start": "egg-scripts start --baseDir=./test/fixtures/apps/swagger-decorator-test --title=egg-server-tt",
+    "stop": "egg-scripts stop --title=egg-server-tt",
     "dev": "egg-bin dev --baseDir=./test/fixtures/apps/swagger-decorator-test -r egg-ts-helper/register",
     "debug": "egg-bin debug --baseDir=./test/fixtures/apps/swagger-decorator-test -r egg-ts-helper/register",
     "test-local": "egg-bin test -r egg-ts-helper/register",
@@ -54,7 +59,9 @@
   "keywords": [
     "decorator",
     "swagger",
-    "egg"
+    "egg",
+    "eggPlugin",
+    "egg-plugin"
   ],
   "author": "Cody",
   "license": "MIT"
