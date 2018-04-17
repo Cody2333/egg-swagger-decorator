@@ -52,9 +52,15 @@ const handleSwagger = (router : Router, options: WrapperOptions) => {
   });
 };
 
-const handleMap = (router : Router, ControllerClass : typeof Controller) => {
-  const mockCtx = { app: {} };
-  const c : Controller = new ControllerClass(Object.assign(mockCtx));
+declare module 'egg' {
+  interface Application {
+    createAnonymousContext(req?: any): Context
+  }
+}
+const handleMap = (app : Application, ControllerClass : typeof Controller) => {
+  const anonymousContext = app.createAnonymousContext();
+  const router = app.router;
+  const c : Controller = new ControllerClass(Object.assign(anonymousContext));
 
   const methods : string[] = Object.getOwnPropertyNames(Object.getPrototypeOf(c));
 
@@ -109,7 +115,6 @@ interface MapOptions {
 }
 
 const handleMapDir = (app: Application, options? : MapOptions) => {
-  const router = app.router;
   const dir = app.config.baseDir + '/app/controller';
   const recursive= options ? options.recursive : true;
   let filenames = readSync(dir, [], recursive).map(name => name.substring(0, name.length - 3));
@@ -118,7 +123,7 @@ const handleMapDir = (app: Application, options? : MapOptions) => {
   classes
     .map(c => c.default)
     .forEach((c) => {
-      handleMap(router, c);
+      handleMap(app, c);
     });
 };
 
