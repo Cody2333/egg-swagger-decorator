@@ -4,12 +4,19 @@ import { getPath } from './utils';
 /**
  * build swagger json from apiObjects
  */
-const swaggerJSON = (options = {}, apiObjects) => {
-  const title = options['title'];
-  const description = options['description'];
-  const version = options['version'];
-  const prefix = options['prefix'] || '';
-  const swaggerOptions = options['swaggerOptions'] || {};
+export interface WrapperOptions {
+  title?: string,
+  description?: string,
+  version?: string,
+  prefix?: string,
+  swaggerOptions?: any,
+  swaggerJsonEndpoint?: string,
+  swaggerHtmlEndpoint?: string,
+  [param: string]: any,
+}
+const swaggerJSON = (options: WrapperOptions, apiObjects) => {
+  
+  const {title = 'API DOC', description ='API DOC', version = '1.0.0',prefix = '', swaggerOptions = {}} = options;
 
   const swaggerJSON = init(title, description, version, swaggerOptions);
 

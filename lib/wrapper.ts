@@ -4,17 +4,21 @@ import swaggerJSON from './swaggerJSON';
 import validate from './validate';
 import {apiObjects} from './decorator';
 import {convertPath, getPath, readSync} from './utils';
-import {Application} from 'egg';
+import { Application, Router, Controller } from 'egg';
+import {WrapperOptions} from './swaggerJSON';
 /**
  * allowed http methods
  */
 const reqMethods = ['get', 'post', 'put', 'patch', 'delete'];
 
-/**
- * middlewara for validating [query, path, body] params
- * @param {Object} parameters
- */
-const validator = parameters => async(ctx, next) => {
+interface Parameters {
+  query?: {},
+  path?: {},
+  body?: {},
+  [param: string]: any,
+}
+
+const validator = (parameters: Parameters) => async(ctx, next) => {
   if (!parameters) {
     await next();
     return;
@@ -32,7 +36,7 @@ const validator = parameters => async(ctx, next) => {
   await next();
 };
 
-const handleSwagger = (router, options) => {
+const handleSwagger = (router : Router, options: WrapperOptions) => {
   const {
     swaggerJsonEndpoint = '/swagger-json',
     swaggerHtmlEndpoint = '/swagger-html',
@@ -48,15 +52,16 @@ const handleSwagger = (router, options) => {
   });
 };
 
-const handleMap = (router, StaticClass) => {
-  const ctx = {
-    app: {}
-  }
-  const c = new StaticClass(ctx);
-  const methods = Object.getOwnPropertyNames(Object.getPrototypeOf(c))
+const handleMap = (router : Router, ControllerClass : typeof Controller) => {
+  const mockCtx = { app: {} };
+  const c : Controller = new ControllerClass(Object.assign(mockCtx));
+
+  const methods : string[] = Object.getOwnPropertyNames(Object.getPrototypeOf(c));
+
   // remove useless field in class object:  constructor, length, name, prototype
   _.pull(methods, 'name', 'constructor', 'length', 'prototype', 'pathName', 'fullPath');
   // map all method in methods
+
   methods
   // filter methods without @request decorator
     .filter((item) => {
@@ -90,19 +95,23 @@ const handleMap = (router, StaticClass) => {
       `${convertPath(path)}`,
       validator(c[item].parameters),
       ...middlewares,
-      ctx => {
-        const c = new StaticClass(ctx);
-        c[item]();
+      async ctx => {
+        const c = new ControllerClass(ctx);
+        await c[item]();
       }
     ];
     router[method](...chain);
   });
 };
 
-const handleMapDir = (router, dir, options) => {
-  const {
-    recursive = false
-  } = options;
+interface MapOptions {
+  recursive: boolean,
+}
+
+const handleMapDir = (app: Application, options? : MapOptions) => {
+  const router = app.router;
+  const dir = app.config.baseDir + '/app/controller';
+  const recursive= options ? options.recursive : true;
   let filenames = readSync(dir, [], recursive).map(name => name.substring(0, name.length - 3));
   filenames = _.uniq(filenames);
   const classes = filenames.map(filename => require(filename));
@@ -113,10 +122,20 @@ const handleMapDir = (router, dir, options) => {
     });
 };
 
-const wrapper = (app : Application, options) => {
+const wrapper = (app : Application, options?: WrapperOptions) => {
+  const opts: WrapperOptions = {
+    title: 'API DOC',
+    description: 'API DOC',
+    version: 'v1.0.0',
+    prefix: '',
+    swaggerJsonEndpoint: '/swagger-json',
+    swaggerHtmlEndpoint: '/swagger-html',
+  };
+  Object.assign(opts, options || {});
+  
   const {router} = app;
-  handleMapDir(router, app.config.baseDir + '/app/controller', {recursive: true})
-  handleSwagger(router, options);
+  handleMapDir(app);
+  handleSwagger(router, opts);
 };
 
 export default wrapper;

@@ -1,4 +1,4 @@
-declare const _default: (title?: string, description?: string, version?: string, options?: {}) => {
+declare const _default: (title: string, description: string, version: string, options?: {}) => {
     info: {
         title: string;
         description: string;

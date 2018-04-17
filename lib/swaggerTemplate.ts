@@ -7,9 +7,9 @@
  */
 
 export default (
-  title = 'API DOC',
-  description = 'API DOC',
-  version = '1.0.0',
+  title: string,
+  description: string,
+  version: string,
   options = {}
 ) => (Object.assign(
   {

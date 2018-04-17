@@ -1,4 +1,4 @@
-const swaggerHTML = apiPath =>
+const swaggerHTML = (apiPath: string) =>
   `
 
 <!DOCTYPE html>

@@ -9,16 +9,9 @@ const convertPath = (path) => {
   return path.replace(re, ':$1');
 };
 
-const getPath = (prefix, path) => `${prefix}${path}`.replace('//', '/');
+const getPath = (prefix : string, path : string) => `${prefix}${path}`.replace('//', '/');
 
-/**
- * read all files in the dir
- * @param {String} dir
- * @param {Array} result
- * @param {Boolean} recursive
- * @returns {Array} an array containing file url
- */
-const readSync = (dir, result: any = [], recursive = false) => {
+const readSync = (dir: string, result: any = [], recursive: boolean = true) => {
   const files = _fs.readdirSync(dir);
   files.forEach((filename) => {
     const filedir = _path.join(dir, filename);

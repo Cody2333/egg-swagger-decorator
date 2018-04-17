@@ -1,2 +1,2 @@
-declare const swaggerHTML: (apiPath: any) => string;
+declare const swaggerHTML: (apiPath: string) => string;
 export default swaggerHTML;

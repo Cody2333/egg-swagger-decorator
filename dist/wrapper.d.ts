@@ -1,3 +1,4 @@
 import { Application } from 'egg';
-declare const wrapper: (app: Application, options: any) => void;
+import { WrapperOptions } from './swaggerJSON';
+declare const wrapper: (app: Application, options?: WrapperOptions | undefined) => void;
 export default wrapper;
