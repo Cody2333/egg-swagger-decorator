@@ -57,6 +57,11 @@ declare module 'egg' {
     createAnonymousContext(req?: any): Context;
     swaggerControllerClasses: {};
   }
+  interface Context {
+    validatedQuery?: {},
+    validatedParams?: {},
+    validatedBody?: {},
+  }
 }
 
 const handleMap = (app : Application, ControllerClass : typeof Controller) => {

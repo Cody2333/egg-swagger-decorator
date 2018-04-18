@@ -1,4 +1,5 @@
 import * as _path from 'path';
+import { Application } from 'egg';
 /**
  * eg. /api/{id} -> /api/:id
  * @param {String} path
@@ -10,7 +11,7 @@ const convertPath = (path) => {
 
 const getPath = (prefix : string, path : string) => `${prefix}${path}`.replace('//', '/');
 
-function loadSwaggerClassesToContext(app) {
+function loadSwaggerClassesToContext(app: Application) {
   const opt = {
     call: false,
     caseStyle: 'lower',
