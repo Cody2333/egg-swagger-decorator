@@ -12,4 +12,5 @@ declare module 'egg' {
     }
 }
 declare const wrapper: (app: Application, options?: WrapperOptions | undefined) => void;
-export default wrapper;
+declare const makeSwaggerRouter: (app: Application) => void;
+export { wrapper, makeSwaggerRouter };

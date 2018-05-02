@@ -1,6 +1,6 @@
 {
   "name": "egg-swagger-decorator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "using decorator to make router definitions and automatically generate swagger doc for egg.js",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
