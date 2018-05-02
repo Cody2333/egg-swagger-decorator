@@ -128,12 +128,13 @@ const wrapper = (app : Application, options?: WrapperOptions) => {
     prefix: '',
     swaggerJsonEndpoint: '/swagger-json',
     swaggerHtmlEndpoint: '/swagger-html',
+    makeSwaggerRouter: false,
   };
   Object.assign(opts, options || {});
   
   const {router} = app;
-  handleMapDir(app);
+  if (makeSwaggerRouter) {handleMapDir(app);}
   handleSwagger(router, opts);
 };
-
-export default wrapper;
+const makeSwaggerRouter = (app: Application) => handleMapDir(app);
+export  {wrapper, makeSwaggerRouter};
