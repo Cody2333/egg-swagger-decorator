@@ -229,6 +229,43 @@ describe('test/app/lib.test.ts', () => {
           assert(err.message === "incorrect field: 'foo', please check again!")
         }
       });
+      
+      it('should throw error when enum not a array', () => {
+        const input = { foo: '1' };
+        const expect = {
+          foo: { type: 'string', enum: 'enum is a string' }
+        };
+        try {
+          validate(input, expect);
+        } catch (err) {
+          assert(err.message === "incorrect field: 'foo', please check again!")
+        }
+      })
+
+      it('should throw error when enum is an empty array', () => {
+        const input = { foo: '1' };
+        const expect = {
+          foo: { type: 'string', enum: [] }
+        };
+        try {
+          validate(input, expect);
+        } catch (err) {
+          assert(err.message === "incorrect field: 'foo', please check again!")
+        }
+      })
+
+
+      it('should throw error when enum doesnt includes input an empty array', () => {
+        const input = { foo: '1' };
+        const expect = {
+          foo: { type: 'string', enum: ['2', '3'] }
+        };
+        try {
+          validate(input, expect);
+        } catch (err) {
+          assert(err.message === "incorrect field: 'foo', please check again!")
+        }
+      })
     });
   });
 });
