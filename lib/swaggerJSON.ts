@@ -15,9 +15,13 @@ export interface WrapperOptions {
   makeSwaggerRouter?: boolean,
   [param: string]: any,
 }
+
+export interface IResp {
+  [param: string]: object
+}
 const swaggerJSON = (options: WrapperOptions, apiObjects) => {
-  
-  const {title = 'API DOC', description ='API DOC', version = '1.0.0',prefix = '', swaggerOptions = {}} = options;
+
+  const { title = 'API DOC', description = 'API DOC', version = '1.0.0', prefix = '', swaggerOptions = {} } = options;
 
   const swaggerJSON = init(title, description, version, swaggerOptions);
 
@@ -39,7 +43,7 @@ const swaggerJSON = (options: WrapperOptions, apiObjects) => {
           description: 'success'
         }
       };
-      const responses : any = value.responses
+      const responses: IResp = value.responses
         ? value.responses
         : defaultResp;
       const {

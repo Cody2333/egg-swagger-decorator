@@ -1,5 +1,7 @@
 import * as _ from 'lodash';
 
+
+import { IResp } from './swaggerJSON';
 /**
  * used for building swagger docs object
  */
@@ -63,7 +65,7 @@ const middlewares = middlewares => (target, name, descriptor) => {
   return descriptor;
 };
 
-const responses = (responses = { 200: { description: 'success' } }) => (target, name, descriptor) => {
+const responses = (responses: IResp = { 200: { description: 'success' } }) => (target, name, descriptor) => {
   descriptor.value.responses = responses;
   _addToApiObject(target, name, apiObjects, { responses });
   return descriptor;
@@ -93,5 +95,7 @@ const body = params('body');
 // formData params
 const formData = params('formData');
 
-export { request, summary, params, desc, description, query, path, body, tags,
-  apiObjects, middlewares, formData, responses };
+export {
+  request, summary, params, desc, description, query, path, body, tags,
+  apiObjects, middlewares, formData, responses
+};

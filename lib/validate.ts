@@ -58,6 +58,9 @@ export default function (input, expect) {
         input[key] = String(input[key]);
         return;
       }
+      if (Array.isArray(expect[key].enum) && expect[key].enum.length) {
+        if (!expect[key].enum.includes(input[key])) throw new InputError(key)
+      }
     }
     // forth check the object type
     if (input[key] !== undefined && expect[key].type === 'object') {

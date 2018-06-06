@@ -17,17 +17,17 @@ const resp = {
   }
 }
 
-export default class Test extends Controller{
+export default class Test extends Controller {
   @request('get', '/users')
   @description('get user list')
   @testTag
-  @middlewares(async (ctx: Context, next) => {ctx.logger.info('mid'); await next()})
+  @middlewares(async (ctx: Context, next) => { ctx.logger.info('mid'); await next() })
   @query({
     type: { type: 'string', required: false, default: 'a', description: 'type' }
   })
   public async getUsers() {
     const { ctx } = this;
-    const users = [{user1: {name: 'xxx'}}]
+    const users = [{ user1: { name: 'xxx' } }]
     ctx.body = { users };
   }
 
@@ -50,5 +50,17 @@ export default class Test extends Controller{
   public async postUser() {
     const body = this.ctx.request.body;
     this.ctx.body = body;
+  }
+
+  @request('get', '/enum')
+  @testTag
+  @query({
+    role: { type: 'string', enum: ['1', '2', '3'], required: true }
+  })
+  @responses(resp)
+  public async testEnum() {
+    const { ctx } = this;
+    console.log(ctx.query);
+    ctx.body = { msg: 'enum passed' };
   }
 }
