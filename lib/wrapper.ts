@@ -1,21 +1,21 @@
+import { Application, Controller, Router } from 'egg';
 import * as _ from 'lodash';
+import {apiObjects} from './decorator';
 import swaggerHTML from './swaggerHTML';
 import swaggerJSON from './swaggerJSON';
-import validate from './validate';
-import {apiObjects} from './decorator';
-import {convertPath, getPath, loadSwaggerClassesToContext} from './utils';
-import { Application, Router, Controller } from 'egg';
 import {WrapperOptions} from './swaggerJSON';
+import {convertPath, getPath, loadSwaggerClassesToContext} from './utils';
+import validate from './validate';
 /**
  * allowed http methods
  */
 const reqMethods = ['get', 'post', 'put', 'patch', 'delete'];
 
 interface Parameters {
-  query?: {},
-  path?: {},
-  body?: {},
-  [param: string]: any,
+  query?: {};
+  path?: {};
+  body?: {};
+  [param: string]: any;
 }
 
 const validator = (parameters: Parameters) => async(ctx, next) => {
@@ -58,9 +58,9 @@ declare module 'egg' {
     swaggerControllerClasses: {};
   }
   interface Context {
-    validatedQuery?: {},
-    validatedParams?: {},
-    validatedBody?: {},
+    validatedQuery?: {};
+    validatedParams?: {};
+    validatedBody?: {};
   }
 }
 
@@ -105,7 +105,7 @@ const handleMap = (app : Application, ControllerClass : typeof Controller) => {
       `${convertPath(path)}`,
       validator(c[item].parameters),
       ...middlewares,
-      async ctx => {
+      async (ctx) => {
         const c = new ControllerClass(ctx);
         await c[item]();
       }
@@ -117,7 +117,7 @@ const handleMap = (app : Application, ControllerClass : typeof Controller) => {
 const handleMapDir = (app: Application) => {
   loadSwaggerClassesToContext(app);
   const classes = app.swaggerControllerClasses;
-  Object.keys(classes).forEach(name => {handleMap(app, classes[name])})
+  Object.keys(classes).forEach((name) => {handleMap(app, classes[name]);});
 };
 
 const wrapper = (app : Application, options?: WrapperOptions) => {
@@ -131,9 +131,9 @@ const wrapper = (app : Application, options?: WrapperOptions) => {
     makeSwaggerRouter: false,
   };
   Object.assign(opts, options || {});
-  
+
   const {router} = app;
-  if (makeSwaggerRouter) {handleMapDir(app);}
+  if (makeSwaggerRouter) {handleMapDir(app); }
   handleSwagger(router, opts);
 };
 const makeSwaggerRouter = (app: Application) => handleMapDir(app);

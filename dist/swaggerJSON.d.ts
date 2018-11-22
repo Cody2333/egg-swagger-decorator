@@ -12,6 +12,9 @@ export interface WrapperOptions {
     makeSwaggerRouter?: boolean;
     [param: string]: any;
 }
+export interface Response {
+    [name: number]: any;
+}
 declare const swaggerJSON: (options: WrapperOptions, apiObjects: any) => {
     info: {
         title: string;

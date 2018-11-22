@@ -10,7 +10,7 @@ export default (
   title: string,
   description: string,
   version: string,
-  options = {}
+  options = {},
 ) => (Object.assign(
   {
     info: { title, description, version },
@@ -25,11 +25,10 @@ export default (
       ApiKeyAuth: {
         type: 'apiKey',
         in: 'header',
-        name: 'Authorization'
-      }
+        name: 'Authorization',
+      },
     },
   },
   options,
 
 ));
-
