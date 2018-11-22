@@ -59,7 +59,7 @@ export default function (input, expect) {
         return;
       }
       if (Array.isArray(expect[key].enum) && expect[key].enum.length) {
-        if (!expect[key].enum.includes(input[key])) throw new InputError(key)
+        if (!expect[key].enum.includes(input[key])) throw new InputError(key);
       }
     }
     // forth check the object type

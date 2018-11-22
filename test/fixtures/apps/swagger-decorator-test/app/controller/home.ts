@@ -1,5 +1,5 @@
-import { Controller, Context } from 'egg';
-import { request, tags, middlewares, responses } from '../../../../../../lib';
+import { Context, Controller } from 'egg';
+import { middlewares, request, responses, tags } from '../../../../../../lib';
 
 const tag = tags(['Home']);
 
@@ -20,9 +20,9 @@ export default class HomeController extends Controller {
         type: 'object',
         properties: {
           msg: { type: 'string', example: 'here is a msg' },
-        }
-      }
-    }
+        },
+      },
+    },
   })
   public async index() {
     const { ctx, service } = this;

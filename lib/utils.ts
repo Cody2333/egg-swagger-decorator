@@ -1,5 +1,5 @@
-import * as _path from 'path';
 import { Application } from 'egg';
+import * as _path from 'path';
 /**
  * eg. /api/{id} -> /api/:id
  * @param {String} path

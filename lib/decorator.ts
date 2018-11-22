@@ -1,19 +1,18 @@
 import * as _ from 'lodash';
 
-
-import { IResp } from './swaggerJSON';
+import { Response } from './swaggerJSON';
 /**
  * used for building swagger docs object
  */
 const apiObjects = {};
 
-
-const _addToApiObject = (target, name, apiObjects, content) => {
+const _addToApiObject = (target, name, apiObj, content) => {
   const key = `${target.constructor.name}-${name}`;
-  if (!apiObjects[key]) apiObjects[key] = {};
-  Object.assign(apiObjects[key], content);
+  if (!apiObj[key]) {
+    apiObj[key] = {};
+  }
+  Object.assign(apiObj[key], content);
 };
-
 
 const _desc = (type, text) => (target, name, descriptor) => {
   descriptor.value[type] = text;
@@ -22,7 +21,9 @@ const _desc = (type, text) => (target, name, descriptor) => {
 };
 
 const _params = (type, parameters) => (target, name, descriptor) => {
-  if (!descriptor.value.parameters) descriptor.value.parameters = {};
+  if (!descriptor.value.parameters) {
+    descriptor.value.parameters = {};
+  }
   descriptor.value.parameters[type] = parameters;
 
   // additional wrapper for body
@@ -33,11 +34,13 @@ const _params = (type, parameters) => (target, name, descriptor) => {
       description: 'request body',
       schema: {
         type: 'object',
-        properties: parameters
+        properties: parameters,
       },
     }];
   } else {
-    swaggerParameters = Object.keys(swaggerParameters).map(key => Object.assign({ name: key }, swaggerParameters[key]));
+    swaggerParameters = Object.keys(swaggerParameters).map((key) => {
+      return Object.assign({ name: key }, swaggerParameters[key]);
+    });
   }
   swaggerParameters.forEach((item) => {
     item.in = type;
@@ -53,21 +56,20 @@ const request = (method, path) => (target, name, descriptor) => {
   descriptor.value.path = path;
   _addToApiObject(target, name, apiObjects, {
     request: { method, path },
-    security: [{ ApiKeyAuth: [] }]
+    security: [{ ApiKeyAuth: [] }],
   });
   return descriptor;
 };
 
-
-const middlewares = middlewares => (target, name, descriptor) => {
-  if (!target || !name) throw new Error();
-  descriptor.value.middlewares = middlewares;
+const middlewares = (val) => (target, name, descriptor) => {
+  if (!target || !name) { throw new Error(); }
+  descriptor.value.middlewares = val;
   return descriptor;
 };
 
-const responses = (responses: IResp = { 200: { description: 'success' } }) => (target, name, descriptor) => {
-  descriptor.value.responses = responses;
-  _addToApiObject(target, name, apiObjects, { responses });
+const responses = (res: Response = { 200: { description: 'success' } }) => (target, name, descriptor) => {
+  descriptor.value.responses = res;
+  _addToApiObject(target, name, apiObjects, { responses: res });
   return descriptor;
 };
 const desc = _.curry(_desc);
@@ -97,5 +99,5 @@ const formData = params('formData');
 
 export {
   request, summary, params, desc, description, query, path, body, tags,
-  apiObjects, middlewares, formData, responses
+  apiObjects, middlewares, formData, responses,
 };

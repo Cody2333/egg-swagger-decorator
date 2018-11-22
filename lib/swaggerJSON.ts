@@ -5,25 +5,25 @@ import { getPath } from './utils';
  * build swagger json from apiObjects
  */
 export interface WrapperOptions {
-  title?: string,
-  description?: string,
-  version?: string,
-  prefix?: string,
-  swaggerOptions?: any,
-  swaggerJsonEndpoint?: string,
-  swaggerHtmlEndpoint?: string,
-  makeSwaggerRouter?: boolean,
-  [param: string]: any,
+  title?: string;
+  description?: string;
+  version?: string;
+  prefix?: string;
+  swaggerOptions?: any;
+  swaggerJsonEndpoint?: string;
+  swaggerHtmlEndpoint?: string;
+  makeSwaggerRouter?: boolean;
+  [param: string]: any;
 }
 
-export interface IResp {
-  [param: string]: object
+export interface Response {
+  [name: number]: any;
 }
 const swaggerJSON = (options: WrapperOptions, apiObjects) => {
 
   const { title = 'API DOC', description = 'API DOC', version = '1.0.0', prefix = '', swaggerOptions = {} } = options;
 
-  const swaggerJSON = init(title, description, version, swaggerOptions);
+  const resultJSON = init(title, description, version, swaggerOptions);
 
   _.chain(apiObjects)
     .forEach((value) => {
@@ -35,15 +35,15 @@ const swaggerJSON = (options: WrapperOptions, apiObjects) => {
       const summary = value.summary
         ? value.summary
         : '';
-      const description = value.description
+      const apiDescription = value.description
         ? value.description
         : summary;
-      const defaultResp = {
+      const defaultResp: Response = {
         200: {
-          description: 'success'
-        }
+          description: 'success',
+        },
       };
-      const responses: IResp = value.responses
+      const responses: Response = value.responses
         ? value.responses
         : defaultResp;
       const {
@@ -63,24 +63,24 @@ const swaggerJSON = (options: WrapperOptions, apiObjects) => {
       ];
 
       // init path object first
-      if (!swaggerJSON.paths[path]) { swaggerJSON.paths[path] = {}; }
+      if (!resultJSON.paths[path]) { resultJSON.paths[path] = {}; }
 
       // add content type [multipart/form-data] to support file upload
       const consumes = formData.length > 0
         ? ['multipart/form-data']
         : undefined;
 
-      swaggerJSON.paths[path][method] = {
+      resultJSON.paths[path][method] = {
         consumes,
         summary,
-        description,
+        description: apiDescription,
         parameters,
         responses,
         tags,
-        security
+        security,
       };
     }).value();
-  return swaggerJSON;
+  return resultJSON;
 };
 
 export default swaggerJSON;
