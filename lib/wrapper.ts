@@ -126,7 +126,14 @@ const handleMapDir = (app: Application) => {
   loadSwaggerClassesToContext(app);
   const classes = app.swaggerControllerClasses;
   Object.keys(classes).forEach(name => {
-    handleMap(app, classes[name]);
+    const prefixName = classes[name];
+    if (typeof prefixName === "function") {
+      handleMap(app, classes[name]);
+    } else {
+      Object.keys(prefixName).forEach(controllerName => {
+        handleMap(app, prefixName[controllerName]);
+      });
+    }
   });
 };
 
